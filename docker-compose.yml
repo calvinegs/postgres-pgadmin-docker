@@ -10,8 +10,12 @@ services:
     environment:
     - POSTGRES_USER=docker     # 建立一個 postgres user 
     - POSTGRES_PASSWORD=docker # 這個 user 的密碼
-    volumes:  # 將 local 的 ./sql/initdb.sql 掛載到 postgres docker /docker-entrypoint-initdb.d/init.sql，目的是建立一個名為 pg_testdb 資料庫
+    volumes:  
+      # 將 local 的 ./sql/initdb.sql 掛載到 postgres docker /docker-entrypoint-initdb.d/init.sql，目的是建立一個名為 pg_testdb 資料庫
       - ./sql/initdb.sql:/docker-entrypoint-initdb.d/init.sql 
+      # 將 docker 中 postgresSQL 資料映射到 local 端 ./pgdbdata 目錄中
+      - ./pgdbdata:/var/lib/postgresql/data
+      # - ./pdconfig/postgres.conf:/etc/postgresql/postgresql.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U docker"]
       interval: 10s
